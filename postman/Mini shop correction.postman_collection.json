@@ -1,0 +1,1702 @@
+{
+	"info": {
+		"_postman_id": "11dc9a2d-47e9-4199-918d-a43fee42ced6",
+		"name": "Mini shop correction",
+		"description": "A simple restful webshop api.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "customer",
+			"item": [
+				{
+					"name": "Gets all customers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "82f08ec2-5308-4d72-9220-55bd18276414",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"const schema = JSON.parse(pm.variables.get(\"customerListSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"    var jsonData = pm.response.json();",
+									"  pm.expect(tv4.validate(jsonData, schema , false, true)).to.be.true;",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer"
+							]
+						},
+						"description": "return a list of all customers"
+					},
+					"response": []
+				},
+				{
+					"name": "Creates a customer",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d5c4f957-7636-43a3-afba-808647edec94",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "2bde0e50-4ba3-48eb-99d4-0a7d0e114fa3",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const customerSchema = JSON.parse(pm.variables.get(\"customerSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"    var jsonData = pm.response.json();",
+									"  pm.expect(tv4.validate(jsonData, customerSchema , false, true)).to.be.true;",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "johndoe",
+									"type": "text"
+								},
+								{
+									"key": "firstname",
+									"value": "John",
+									"type": "text"
+								},
+								{
+									"key": "lastname",
+									"value": "Doe",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "johndoe@test.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer"
+							]
+						},
+						"description": "Adds a new customer to the customers list."
+					},
+					"response": []
+				},
+				{
+					"name": "Gets a single customer",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d487b78c-8dd8-4797-a46b-f0890cdb865c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "ac81c67e-7689-4fe5-a1cb-60749f332d57",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const customerSchema = JSON.parse(pm.variables.get(\"customerSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"    var jsonData = pm.response.json();",
+									"  pm.expect(tv4.validate(jsonData, customerSchema , false, true)).to.be.true;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}"
+							]
+						},
+						"description": "returns a single customer"
+					},
+					"response": []
+				},
+				{
+					"name": "update a customer",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "6ff48a40-85e2-4ab4-8435-cc2ef66c1592",
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "f5e8cd26-ced4-491d-8eb7-196f2eff3a67",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const customerSchema = JSON.parse(pm.variables.get(\"customerSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"    var jsonData = pm.response.json();",
+									"  pm.expect(tv4.validate(jsonData, customerSchema , false, true)).to.be.true;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n     \"customerid\": {{customerid}},\n    \"username\": \"updatedCustomer\",\n    \"firstname\": \"Updated\",\n    \"lastname\": \"Customer\",\n    \"email\": \"updated@customer.com\",\n    \"phone\": \"9876543210\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}"
+							]
+						},
+						"description": "Updates a  customer in the customers list."
+					},
+					"response": []
+				},
+				{
+					"name": "delete a customer",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4834b15d-5b19-4e10-ae5f-8d1eac421531",
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7a1eead1-c017-44a4-a11c-4c08c9c66b5f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer/\" + pm.environment.get(\"customerid\"), function (err, res) {",
+									"  if (err) { console.log(err); }    ",
+									"  pm.test('customer deleted', function () {",
+									"      console.log(res);",
+									"    pm.expect(res).to.have.property('code', 404);",
+									"  });",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}"
+							]
+						},
+						"description": "deletes a  customer from the customers list."
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for customer"
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "Gets all products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a3b3f75d-a72d-4317-bc70-7a21432fa80f",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"const schema = JSON.parse(pm.variables.get(\"productListSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"    var jsonData = pm.response.json();",
+									"  pm.expect(tv4.validate(jsonData, schema , false, true)).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"product"
+							]
+						},
+						"description": "return a list of all products"
+					},
+					"response": []
+				},
+				{
+					"name": "Creates a product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "95614ead-a284-46b4-af64-eeb8ebd2b6f1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const productSchema = JSON.parse(pm.variables.get(\"productSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"    var jsonData = pm.response.json();",
+									"  pm.expect(tv4.validate(jsonData, productSchema , false, true)).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "productname",
+									"value": "Test new product",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "New product description",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "Test category",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "9.99",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"product"
+							]
+						},
+						"description": "Adds a new product to the products list."
+					},
+					"response": []
+				},
+				{
+					"name": "Gets a single product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5ae4caaf-91d9-422e-8d04-2f6e679ff1e6",
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/product\", function (err, response) {",
+									"    var json = response.json();",
+									"    var productid;",
+									"    if (json.length>0){",
+									"        productid = json[0].productid;",
+									"        pm.environment.set(\"productid\", productid);",
+									"    }",
+									"});",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "482cee79-25b5-4b03-9e34-3a834077f3ba",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const productSchema = JSON.parse(pm.variables.get(\"productSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"    var jsonData = pm.response.json();",
+									"  pm.expect(tv4.validate(jsonData, productSchema , false, true)).to.be.true;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/product/{{productid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"product",
+								"{{productid}}"
+							]
+						},
+						"description": "returns a single product"
+					},
+					"response": []
+				},
+				{
+					"name": "update a product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "244d936d-6905-436a-8df8-68d9f81dede9",
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/product\", function (err, response) {",
+									"    var json = response.json();",
+									"    var productid;",
+									"    if (json.length>0){",
+									"        productid = json[0].productid;",
+									"        pm.environment.set(\"productid\", productid);",
+									"    }",
+									"});",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5c52afa-1f03-466a-abc3-c17227752406",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const productSchema = JSON.parse(pm.variables.get(\"productSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"    var jsonData = pm.response.json();",
+									"  pm.expect(tv4.validate(jsonData, productSchema , false, true)).to.be.true;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"productid\": {{productid}},\n        \"productname\": \"Updated product\",\n        \"description\": \"New stuff\",\n        \"category\": \"other category\",\n        \"price\": 19.99,\n        \"status\": \"inactive\"\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/product/{{productid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"product",
+								"{{productid}}"
+							]
+						},
+						"description": "Updates a  product in the products list."
+					},
+					"response": []
+				},
+				{
+					"name": "delete a product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f931dddf-e6f4-448e-9548-c8994bc5f0ad",
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/product\", function (err, response) {",
+									"    var json = response.json();",
+									"    var productid;",
+									"    if (json.length>0){",
+									"        productid = json[0].productid;",
+									"        pm.environment.set(\"productid\", productid);",
+									"    }",
+									"});",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a304e10a-57bc-458d-ac86-ec88b9f1c621",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/product/\" + pm.environment.get(\"productid\"), function (err, res) {",
+									"  if (err) { console.log(err); }",
+									"  pm.test('product deleted', function () {",
+									"      console.log(res);",
+									"    pm.expect(res).to.have.property('code', 404);",
+									"  });",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/product/{{productid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"product",
+								"{{productid}}"
+							]
+						},
+						"description": "deletes a  product from the products list."
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for product"
+		},
+		{
+			"name": "store",
+			"item": [
+				{
+					"name": "add an item to a new shopping cart",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0cd04cf4-3023-4a08-9ebc-0fdd75102ee2",
+								"exec": [
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});",
+									"",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/product\", function (err, response) {",
+									"    var json = response.json();",
+									"    var productid;",
+									"    if (json.length>0){",
+									"        productid = json[0].productid;",
+									"        pm.environment.set(\"productid\", productid);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "67c9eef7-af79-4d08-910b-5e08246aa300",
+								"exec": [
+									"const cartSchema = JSON.parse(pm.variables.get(\"cartSchema\"));",
+									"",
+									"pm.test('Schema validation', function() {",
+									"  var jsonData = pm.response.json();",
+									"    pm.environment.set(\"cartid\", jsonData.cartid);",
+									"  var validation = tv4.validate(jsonData, cartSchema , false, true);",
+									"  if(tv4.error !== null) {",
+									"      console.log(tv4.error.message);",
+									"  }",
+									"  pm.expect(validation).to.be.true;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "productid",
+									"value": "{{productid}}",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}",
+								"cart"
+							]
+						},
+						"description": "Use this when inserting a new item to a cart for the first time. This will return a cart with an id that shall be used in all calls when adding or updating or deleting products."
+					},
+					"response": []
+				},
+				{
+					"name": "view shopping cart content",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b0c5947c-c11d-4522-b4b7-d62168b45d03",
+								"exec": [
+									"// get customer 0",
+									"",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});",
+									"",
+									"// get cart for customer",
+									"var customerid = pm.environment.get(\"customerid\");",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer/\" + customerid + \"/cart\", function (err, response) {",
+									"    var json = response.json();",
+									"    var cartid;",
+									"    if (json.length>0){",
+									"        cartid = json[0].cartid;",
+									"        pm.environment.set(\"cartid\", cartid);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e2b623b-a863-4ff3-8d4b-98ea98d98107",
+								"exec": [
+									"const cartSchema = JSON.parse(pm.variables.get(\"cartSchema\"));",
+									"",
+									"pm.test('Schema validation', function() {",
+									"  var jsonData = pm.response.json();",
+									"  var validation = tv4.validate(jsonData, cartSchema , false, true);",
+									"  if(tv4.error !== null) {",
+									"      console.log(tv4.error.message);",
+									"  }",
+									"  pm.expect(validation).to.be.true;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}/cart/{{cartid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}",
+								"cart",
+								"{{cartid}}"
+							]
+						},
+						"description": "view  content of given shopping cart id."
+					},
+					"response": []
+				},
+				{
+					"name": "add an item to a given shopping cart",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0c09c0f2-6282-442a-9d1f-6ba0ee19538c",
+								"exec": [
+									"// get customer 0",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});",
+									"",
+									"// get product 0",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/product\", function (err, response) {",
+									"    var json = response.json();",
+									"    var productid;",
+									"    if (json.length>0){",
+									"        productid = json[0].productid;",
+									"        pm.environment.set(\"productid\", productid);",
+									"    }",
+									"});",
+									"",
+									"// get cart for customer",
+									"var customerid = pm.environment.get(\"customerid\");",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer/\" + customerid + \"/cart\", function (err, response) {",
+									"    var json = response.json();",
+									"    var cartid;",
+									"    if (json.length>0){",
+									"        cartid = json[0].cartid;",
+									"        pm.environment.set(\"cartid\", cartid);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7ca3ec47-9966-44ba-9aca-a59ab6eb3d2c",
+								"exec": [
+									"const cartSchema = JSON.parse(pm.variables.get(\"cartSchema\"));",
+									"",
+									"pm.test('Schema validation', function() {",
+									"  var jsonData = pm.response.json();",
+									"    pm.environment.set(\"cartid\", jsonData.cartid);",
+									"  var validation = tv4.validate(jsonData, cartSchema , false, true);",
+									"  if(tv4.error !== null) {",
+									"      console.log(tv4.error.message);",
+									"  }",
+									"  pm.expect(validation).to.be.true;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "productid",
+									"value": "{{productid}}",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}/cart/{{cartid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}",
+								"cart",
+								"{{cartid}}"
+							]
+						},
+						"description": "Use this when inserting a new product to given shopping cart id. This will return a CartItem with the new updated cart."
+					},
+					"response": []
+				},
+				{
+					"name": "update  a shopping cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d6aaab3c-c0b7-4387-9d44-67002c176679",
+								"exec": [
+									"const cartSchema = JSON.parse(pm.variables.get(\"cartSchema\"));",
+									"",
+									"pm.test('Schema validation', function() {",
+									"  var jsonData = pm.response.json();",
+									"    pm.environment.set(\"cartid\", jsonData.cartid);",
+									"  var validation = tv4.validate(jsonData, cartSchema , false, true);",
+									"  if(tv4.error !== null) {",
+									"      console.log(tv4.error.message);",
+									"  }  pm.expect(validation).to.be.true;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "de90d1b9-9472-48d3-92f9-246ed88c5cc5",
+								"exec": [
+									"// get customer 0",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});",
+									"",
+									"// get product 0",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/product\", function (err, response) {",
+									"    var json = response.json();",
+									"    var productid;",
+									"    if (json.length>0){",
+									"        productid = json[0].productid;",
+									"        pm.environment.set(\"productid\", productid);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "productid",
+									"value": "{{productid}}",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "17",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}/cart/{{cartid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}",
+								"cart",
+								"{{cartid}}"
+							]
+						},
+						"description": "Use this when updating a given shopping cart id. This will return a CartItem with the new updated cart."
+					},
+					"response": []
+				},
+				{
+					"name": "view total price of given shopping cart",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ef95912a-b832-4df7-9f4b-b5c7a1f07786",
+								"type": "text/javascript",
+								"exec": [
+									"// get customer 0",
+									"",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dc8fa85e-8ef1-4652-86ca-cfd7908d76ef",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}/cart/{{cartid}}/total",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}",
+								"cart",
+								"{{cartid}}",
+								"total"
+							]
+						},
+						"description": "Compute and display the total price for a given shopping cart."
+					},
+					"response": []
+				},
+				{
+					"name": "delete an item in a given cart",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9bc60ec3-a098-453a-8932-8e38d508751e",
+								"exec": [
+									"// get customer 0",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});",
+									"",
+									"// get cart for customer",
+									"var customerid = pm.environment.get(\"customerid\");",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer/\" + customerid + \"/cart\", function (err, response) {",
+									"    var json = response.json();",
+									"    var cartid;",
+									"    if (json.length>0){",
+									"        cartid = json[0].cartid;",
+									"        pm.environment.set(\"cartid\", cartid);",
+									"    }",
+									"});",
+									"",
+									"var cartid = pm.environment.get(\"cartid\");",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer/\" + customerid + \"/cart/\" + cartid, function (err, response) {",
+									"    var cart = response.json();",
+									"    var cartcontent = cart.content;",
+									"    if (cartcontent.length>0){",
+									"        var cartitemid = cartcontent[0].cartitemid;",
+									"        console.log(cartitemid);",
+									"        pm.environment.set(\"itemid\", cartitemid);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a716a3f-80df-48f3-90b4-d33a11e48fa0",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}/cart/{{cartid}}/item/{{itemid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}",
+								"cart",
+								"{{cartid}}",
+								"item",
+								"{{itemid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "init - create shopping cart",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0cd04cf4-3023-4a08-9ebc-0fdd75102ee2",
+								"exec": [
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/customer\", function (err, response) {",
+									"    var json = response.json();",
+									"    var customerid;",
+									"    if (json.length>0){",
+									"        customerid = json[0].customerid;",
+									"        pm.environment.set(\"customerid\", customerid);",
+									"    }",
+									"});",
+									"",
+									"pm.sendRequest(\"http://localhost:8080/minishop/api/product\", function (err, response) {",
+									"    var json = response.json();",
+									"    var productid;",
+									"    if (json.length>0){",
+									"        productid = json[0].productid;",
+									"        pm.environment.set(\"productid\", productid);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "52465762-d75e-44a4-baba-d0ac5bb80d8e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"      var jsonData = pm.response.json();",
+									"    pm.environment.set(\"cartid\", jsonData.cartid);",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "productid",
+									"value": "{{productid}}",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/customer/{{customerid}}/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"customer",
+								"{{customerid}}",
+								"cart"
+							]
+						},
+						"description": "Use this when inserting a new item to a cart for the first time. This will return a cart with an id that shall be used in all calls when adding or updating or deleting products."
+					},
+					"response": []
+				},
+				{
+					"name": "Submit an order (checkout)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4bcc7c5-0079-407e-a46b-6b63dec32f15",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const orderSchema = JSON.parse(pm.variables.get(\"orderSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"  var jsonData = pm.response.json();",
+									"  pm.environment.set(\"orderid\", jsonData.orderid);",
+									"  var validation = tv4.validate(jsonData, orderSchema , false);",
+									"  if(!validation) {",
+									"      console.log(tv4.error);",
+									"  }",
+									"  pm.expect(validation).to.be.true;",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "cartid",
+									"value": "{{cartid}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"order"
+							]
+						},
+						"description": "creates a new order."
+					},
+					"response": []
+				},
+				{
+					"name": "List all orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "adbd7862-a36b-4342-a81b-5e0905c47abf",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"order"
+							]
+						},
+						"description": "return a list of all orders"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a given order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e59c8b24-e620-4eb0-a3cd-362c5f3396cf",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const orderSchema = JSON.parse(pm.variables.get(\"orderSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"  var jsonData = pm.response.json();",
+									"    var validation = tv4.validate(jsonData, orderSchema , false);",
+									"  if(!validation) {",
+									"      console.log(tv4.error);",
+									"  }",
+									"  pm.expect(validation).to.be.true;",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "346d8482-4843-4670-9ca9-e16c39ab8603",
+								"exec": [
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/order/{{orderid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"order",
+								"{{orderid}}"
+							]
+						},
+						"description": "The requested order"
+					},
+					"response": []
+				},
+				{
+					"name": "Update the status of a given order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3de45718-dec5-48f6-8f0b-9b3ceb51115d",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "414ffaa9-05d2-40ec-83c3-d88d2005b821",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const orderSchema = JSON.parse(pm.variables.get(\"orderSchema\"));",
+									"pm.test('Schema is valid', function() {",
+									"  var jsonData = pm.response.json();",
+									"    var validation = tv4.validate(jsonData, orderSchema , false);",
+									"  if(!validation) {",
+									"      console.log(tv4.error);",
+									"  }",
+									"  pm.expect(validation).to.be.true;",
+									"});",
+									"",
+									"",
+									"pm.test(\"status is now paid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.orderstatus).to.eql(\"paid\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "newstatus",
+									"value": "paid",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/minishop/api/order/{{orderid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"minishop",
+								"api",
+								"order",
+								"{{orderid}}"
+							]
+						},
+						"description": "Update the status of a given order. The new status is passed."
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for order"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "4851b01f-bf61-4e3e-a531-f2f4162c4958",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d3a3cd57-4ab5-464f-9c53-98fb56ef3ac5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8c071143-c650-4d50-803e-4d25a8478678",
+			"key": "customerSchema",
+			"value": "{\"type\":\"object\",\"required\":[\"customerid\",\"username\",\"firstname\",\"lastname\",\"email\"],\"properties\":{\"customerid\":{\"type\":\"integer\",\"format\":\"int64\"},\"username\":{\"type\":\"string\"},\"firstname\":{\"type\":\"string\"},\"lastname\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"}}}",
+			"type": "string"
+		},
+		{
+			"id": "e86a8fb7-523e-4de7-95f2-b452902e6baa",
+			"key": "customerListSchema",
+			"value": "{\n    \"type\" : \"array\",\n    \"items\" : {\n      \"type\" : \"object\",\n    \"required\": [\"customerid\", \"username\", \"firstname\", \"lastname\", \"email\"],\n\n      \"properties\" : {\n        \"customerid\" : {\n          \"type\" : \"integer\",\n          \"format\" : \"int64\"\n        },\n        \"username\" : {\n          \"type\" : \"string\"\n        },\n        \"firstname\" : {\n          \"type\" : \"string\"\n        },\n        \"lastname\" : {\n          \"type\" : \"string\"\n        },\n        \"email\" : {\n          \"type\" : \"string\"\n        },\n        \"phone\" : {\n          \"type\" : \"string\"        \n        }\n      }\n    }\n    }",
+			"type": "string"
+		},
+		{
+			"id": "88479ed7-a7db-4294-be50-56122c5f14d1",
+			"key": "productSchema",
+			"value": "{\"type\" : \"object\",\n\"required\":[\"productid\" ,\"productname\" ,\"description\" ,\"category\" ,\"price\" ,\"status\"],\n      \"properties\" : {\n        \"productid\" : {\n          \"type\" : \"integer\",\n          \"format\" : \"int64\"\n        },\n        \"productname\" : {\n          \"type\" : \"string\"\n        },\n        \"description\" : {\n          \"type\" : \"string\"\n        },\n        \"category\" : {\n          \"type\" : \"string\"\n        },\n        \"price\" : {\n          \"type\" : \"number\"\n        },\n        \"status\" : {\n          \"type\" : \"string\",\n          \"enum\" : [ \"active\", \"inactive\" ]\n        }\n      }}",
+			"type": "string"
+		},
+		{
+			"id": "de965cb3-81da-4f65-8104-ede661d2b0ea",
+			"key": "productListSchema",
+			"value": "{\n    \"type\" : \"array\",\n    \"items\" : {\"type\" : \"object\",\n\"required\":[\"productid\" ,\"productname\" ,\"description\" ,\"category\" ,\"price\" ,\"status\"],\n      \"properties\" : {\n        \"productid\" : {\n          \"type\" : \"integer\",\n          \"format\" : \"int64\"\n        },\n        \"productname\" : {\n          \"type\" : \"string\"\n        },\n        \"description\" : {\n          \"type\" : \"string\"\n        },\n        \"category\" : {\n          \"type\" : \"string\"\n        },\n        \"price\" : {\n          \"type\" : \"number\"\n        },\n        \"status\" : {\n          \"type\" : \"string\",\n          \"enum\" : [ \"active\", \"inactive\" ]\n        }\n      }}\n    }",
+			"type": "string"
+		},
+		{
+			"id": "9dfad1a9-3b83-4303-b575-6ccc371050b4",
+			"key": "cartSchema",
+			"value": "{\n  \"type\":\"object\",\n    \"properties\":{\n  \"cartid\":{\n    \"type\":\"integer\",\n        \"format\":\"int64\"\n  },\n  \"cartstatus\":{\n    \"type\":\"string\",\n        \"enum\":[\n      \"open\",\n      \"checked_out\"\n    ]\n  },\n  \"content\":{\n    \"type\":\"array\",\n        \"items\":{\n      \"type\":\"object\",\n          \"properties\":{\n        \"cartitemid\":{\n          \"type\":\"integer\",\n              \"format\":\"int64\"\n        },\n        \"product\":{\n          \"type\":\"object\",\n              \"required\":[\n            \"productid\",\n            \"productname\",\n            \"description\",\n            \"category\",\n            \"price\",\n            \"status\"\n          ],\n              \"properties\":{\n            \"productid\":{\n              \"type\":\"integer\",\n                  \"format\":\"int64\"\n            },\n            \"productname\":{\n              \"type\":\"string\"\n            },\n            \"description\":{\n              \"type\":\"string\"\n            },\n            \"category\":{\n              \"type\":\"string\"\n            },\n            \"price\":{\n              \"type\":\"number\"\n            },\n            \"status\":{\n              \"type\":\"string\",\n                  \"enum\":[\n                \"active\",\n                \"inactive\"\n              ]\n            }\n          }\n        },\n        \"quantity\":{\n          \"type\":\"integer\",\n              \"format\":\"int64\"\n        }\n      }\n    }\n  }\n}\n}",
+			"type": "string"
+		},
+		{
+			"id": "a842dee8-dfd1-4f6e-89f0-6f34b567ed7c",
+			"key": "orderSchema",
+			"value": "{  \n  \"type\":\"object\",\n  \"properties\":{  \n    \"orderid\":{  \n      \"type\":\"integer\",\n      \"format\":\"int64\"\n    },\n    \"orderdate\":{  \n      \"type\":\"string\",\n      \"format\":\"date\"\n    },\n    \"orderstatus\":{  \n      \"type\":\"string\",\n      \"enum\":[  \n        \"open\",\n        \"confirmed\",\n        \"paid\",\n        \"shipped\",\n        \"canceled\"\n      ]\n    },\n    \"content\":{  \n      \"type\":\"array\",\n      \"items\":{  \n        \"type\":\"object\",\n        \"properties\":{  \n          \"orderlineposition\":{  \n            \"type\":\"integer\",\n            \"format\":\"int64\"\n          },\n          \"product\":{  \n            \"type\":\"object\",\n            \"required\":[  \n              \"productid\",\n              \"productname\",\n              \"description\",\n              \"category\",\n              \"price\",\n              \"status\"\n            ],\n            \"properties\":{  \n              \"productid\":{  \n                \"type\":\"integer\",\n                \"format\":\"int64\"\n              },\n              \"productname\":{  \n                \"type\":\"string\"\n              },\n              \"description\":{  \n                \"type\":\"string\"\n              },\n              \"category\":{  \n                \"type\":\"string\"\n              },\n              \"price\":{  \n                \"type\":\"number\"\n              },\n              \"status\":{  \n                \"type\":\"string\",\n                \"enum\":[  \n                  \"active\",\n                  \"inactive\"\n                ]\n              }\n            }\n          },\n          \"quantity\":{  \n            \"type\":\"integer\",\n            \"format\":\"int64\"\n          }\n        }\n      }\n    }\n  }\n}",
+			"type": "string"
+		}
+	]
+}
