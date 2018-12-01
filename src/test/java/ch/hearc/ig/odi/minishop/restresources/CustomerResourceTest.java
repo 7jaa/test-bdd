@@ -3,23 +3,22 @@ package ch.hearc.ig.odi.minishop.restresources;
 import static org.junit.Assert.*;
 
 import ch.hearc.ig.odi.minishop.business.Customer;
+import ch.hearc.ig.odi.minishop.exception.CustomerException;
 import ch.hearc.ig.odi.minishop.services.MockPersistence;
 import org.junit.Test;
 
 public class CustomerResourceTest {
 
   @Test
-  public void updateCustomer() {
+  public void getCustomer() throws CustomerException {
     MockPersistence mp = new MockPersistence();
-    CustomerResource cr = new CustomerResource();
 
-    Customer expectedCustomer = mp.getCustomers().get(1);
+    Customer expectedCustomer = mp.getCustomers().get(0);
 
-    Customer actualCustomer = mp.getCustomers().get(0);
+    Customer actualCustomer = new Customer();
     assertNotEquals(expectedCustomer,actualCustomer);
 
-    Long actualCustomerId = actualCustomer.getCustomerid();
-    cr.updateCustomer(actualCustomerId,expectedCustomer);
+    actualCustomer = mp.getCustomer((long) 3000);
     assertEquals(expectedCustomer,actualCustomer);
   }
 }
