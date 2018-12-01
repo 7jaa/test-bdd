@@ -11,6 +11,7 @@ public class CustomerResourceTest {
 
   @Test
   public void getCustomer() throws CustomerException {
+
     MockPersistence mp = new MockPersistence();
 
     Customer expectedCustomer = mp.getCustomers().get(0);
